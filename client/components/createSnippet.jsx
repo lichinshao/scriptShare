@@ -6,91 +6,99 @@ class CreateSnippet extends React.Component {
     super(props);
     this.state = {
       rows: {
-        '1': '',
+        '1' : 'hi there',
+        '2' : 'secondline'
       },
       currentRow: 1,
+      newLine: false
     }
     this.renderSnippetBox = this.renderSnippetBox.bind(this);
     this.handleTextAreaEnter = this.handleTextAreaEnter.bind(this);
     this.renderRows = this.renderRows.bind(this);
     this.renderRow = this.renderRow.bind(this);
+    this.setRowContent = this.setRowContent.bind(this);
+
+  }
+
+  componentDidUpdate() {
+    if (this.state.newLine) {
+      let newLine = this.state.currentRow;
+      this.refs[newLine - 1].focus();
+    }
+  }
+
+  handleSubmit() {
+
   }
 
   renderRows() {
     let rows = this.state.rows;
     let rowNumbers = Object.keys(rows);
-    console.log('rowNumbers', rowNumbers)
+    let numberOfRows = rowNumbers.length;
     let createRowDiv = rowNumbers.map((number, index) => this.renderRow(number, index))
-    // var results = [];
-    // var row ='';
-
-    // for(let i = 1; i <= this.state.currentRows; i++) {
-    //   console.log('in for loop', i)
-    //   row = ('<div style={styles.row}><div style={styles.rowCount}>{i}</div><div style={styles.rowContent}></div></div>');
-    //   results.push(row);
-    // }
-    // console.log('results', results)
-    // return results.join('')
     return createRowDiv;
   }
 
   renderRow(rowNumber, index) {
-    let rowString = this.state.rows.rowNumber;
+    let rows = this.state.rows;
+    let rowString = rows[rowNumber];
+
     return (
-      <div style={styles.row} key={index} >
+      <div style={styles.row} key={index}>
         <div style={styles.rowNumber}>{rowNumber}</div>
-        <div style={styles.rowContent}>{rowString}</div>
+        <div style={styles.rowContent}><input type="text" ref={index} placeholder={rowString} onChange={(e) =>this.setRowContent(e, rowNumber)}/></div>
       </div>
     )
   }
 
+  setRowContent (e, rowNumber) {
+    let rows = this.state.rows;
+    let rowNum = rowNumber.toString();
+    rows[rowNum] = e.target.value;
+  }
+
   handleTextAreaEnter(e) {
     let curr = Number(this.state.currentRow);
-    console.log('current row before', curr)
     let next = curr + 1;
-    console.log('next', next)
     let newRowNumber = next.toString();
-    console.log('newRowNumber', newRowNumber)
     let rows = this.state.rows;
-
-    // curr++;
-    // console.log('curr ad', curr)
     if (e.which === 13) {
+      e.preventDefault();
       rows[newRowNumber] = '';
-      console.log('new rows', rows)
+      // rows[newRowNumber].focus();
+      // console.log('e', e.target)
+      // this.refs[next].focus();
       this.setState({
-        currentRow: next
+        currentRow: next,
+        newLine: true
       });
+      // console.log('first ref', this.refs[0])
+      // console.log('second ref', this.refs[1])
     }
-    //     // $(e.target).children(":first").clone().appendTo(e.target);
-
-    //     this.setState({'currentRow': curr});
-    //     $(e.target).append('<div style={styles.rowx}><div style={styles.rowCount}>'+ curr +'</div> <div style={styles.rowContent}></div></div>');
-        // $(e.target).children().remove();
-        // console.log('rows', rows.toString())
-        // rows.appendTo($(e.target));
-      //}
   }
 
   renderSnippetBox() {
-
     return(
-      <div>
-        <input className="snippet-name" type="text" placeholder="Name your snippet!"/>
-        <div id="snippet-container" tabIndex="0" style={styles.textarea} onKeyPress={this.handleTextAreaEnter}>
-            {this.renderRows()}
-        </div>
+      <div id="snippet-container" tabIndex="0" style={styles.textarea} onKeyPress={this.handleTextAreaEnter}>
+          {this.renderRows()}
       </div>
     )
   }
 
   render() {
+    // this.changeFocus();
     return (
       <div className="container">
         <div className="snippet-description" style={styles.snippetDesc}>
-        <input type="text" className="description" placeholder="Snippet description..."/>
+          <input type="text" className="description" placeholder="Snippet description..."/>
+        </div>
+        <div>
+          <input className="snippet-name" type="text" placeholder="Name your snippet!"/>
         </div>
         {this.renderSnippetBox()}
+        <div>
+          <button type="submit" onSubmit={this.handleSubmit}>Create snippet</button>
+        </div>
       </div>
     )
   }
@@ -103,7 +111,8 @@ const styles = {
     width: '30px'
   },
   'rowContent' : {
-    display: 'inline-block'
+    display: 'inline-block',
+    width: '350px'
   },
   'row' : {
     position: 'relative',
