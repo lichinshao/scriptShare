@@ -7,7 +7,7 @@ class CreateSnippet extends React.Component {
     this.state = {
       rows: {
         '1' : 'hi there',
-        '2' : 'secondline'
+        '2' : ''
       },
       currentRow: 1,
       newLine: false
@@ -17,7 +17,7 @@ class CreateSnippet extends React.Component {
     this.renderRows = this.renderRows.bind(this);
     this.renderRow = this.renderRow.bind(this);
     this.setRowContent = this.setRowContent.bind(this);
-
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidUpdate() {
@@ -28,7 +28,23 @@ class CreateSnippet extends React.Component {
   }
 
   handleSubmit() {
+    let snippet = this.state.rows;
+    console.log('snippet', snippet)
+  }
 
+  handleTextAreaEnter(e) {
+    let curr = Number(this.state.currentRow);
+    let next = curr + 1;
+    let newRowNumber = next.toString();
+    let rows = this.state.rows;
+    if (e.which === 13) {
+      e.preventDefault();
+      rows[newRowNumber] = '';
+      this.setState({
+        currentRow: next,
+        newLine: true
+      });
+    }
   }
 
   renderRows() {
@@ -57,25 +73,6 @@ class CreateSnippet extends React.Component {
     rows[rowNum] = e.target.value;
   }
 
-  handleTextAreaEnter(e) {
-    let curr = Number(this.state.currentRow);
-    let next = curr + 1;
-    let newRowNumber = next.toString();
-    let rows = this.state.rows;
-    if (e.which === 13) {
-      e.preventDefault();
-      rows[newRowNumber] = '';
-      // rows[newRowNumber].focus();
-      // console.log('e', e.target)
-      // this.refs[next].focus();
-      this.setState({
-        currentRow: next,
-        newLine: true
-      });
-      // console.log('first ref', this.refs[0])
-      // console.log('second ref', this.refs[1])
-    }
-  }
 
   renderSnippetBox() {
     return(
@@ -97,7 +94,7 @@ class CreateSnippet extends React.Component {
         </div>
         {this.renderSnippetBox()}
         <div>
-          <button type="submit" onSubmit={this.handleSubmit}>Create snippet</button>
+          <button type="submit" onClick={this.handleSubmit}>Create snippet</button>
         </div>
       </div>
     )
