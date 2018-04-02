@@ -1,0 +1,8 @@
+.row-number {
+  width: 30px;
+  display: inline-block;
+  float: left;
+}
+.row-input {
+  width: 300px;
+}
