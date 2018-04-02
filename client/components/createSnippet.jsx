@@ -5,41 +5,71 @@ class CreateSnippet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      'rows': 4,
-      'currentRow': 1,
+      rows: {
+        '1': '',
+      },
+      currentRow: 1,
     }
     this.renderSnippetBox = this.renderSnippetBox.bind(this);
     this.handleTextAreaEnter = this.handleTextAreaEnter.bind(this);
-    this.makeRows = this.makeRows.bind(this);
+    this.renderRows = this.renderRows.bind(this);
+    this.renderRow = this.renderRow.bind(this);
   }
 
-  makeRows() {
-    var results = [];
-    var row ='';
+  renderRows() {
+    let rows = this.state.rows;
+    let rowNumbers = Object.keys(rows);
+    console.log('rowNumbers', rowNumbers)
+    let createRowDiv = rowNumbers.map((number, index) => this.renderRow(number, index))
+    // var results = [];
+    // var row ='';
 
-    for(let i = 1; i <= this.state.currentRows; i++) {
-      console.log('in for loop', i)
-      row = ('<div style={styles.row}><div style={styles.rowCount}>{i}</div><div style={styles.rowContent}></div></div>');
-      results.push(row);
-    }
-    console.log('results', results)
-    return results.join('')
+    // for(let i = 1; i <= this.state.currentRows; i++) {
+    //   console.log('in for loop', i)
+    //   row = ('<div style={styles.row}><div style={styles.rowCount}>{i}</div><div style={styles.rowContent}></div></div>');
+    //   results.push(row);
+    // }
+    // console.log('results', results)
+    // return results.join('')
+    return createRowDiv;
+  }
+
+  renderRow(rowNumber, index) {
+    let rowString = this.state.rows.rowNumber;
+    return (
+      <div style={styles.row} key={index} >
+        <div style={styles.rowNumber}>{rowNumber}</div>
+        <div style={styles.rowContent}>{rowString}</div>
+      </div>
+    )
   }
 
   handleTextAreaEnter(e) {
-    // console.log('current row before', this.state.currentRow)
-    let curr = this.state.currentRow;
-    curr++;
-    console.log('curr ad', curr)
-      if (e.which === 13) {
-        // $(e.target).children(":first").clone().appendTo(e.target);
+    let curr = Number(this.state.currentRow);
+    console.log('current row before', curr)
+    let next = curr + 1;
+    console.log('next', next)
+    let newRowNumber = next.toString();
+    console.log('newRowNumber', newRowNumber)
+    let rows = this.state.rows;
 
-        this.setState({'currentRow': curr});
-        $(e.target).append('<div style={styles.rowx}><div style={styles.rowCount}>'+ curr +'</div> <div style={styles.rowContent}></div></div>');
+    // curr++;
+    // console.log('curr ad', curr)
+    if (e.which === 13) {
+      rows[newRowNumber] = '';
+      console.log('new rows', rows)
+      this.setState({
+        currentRow: next
+      });
+    }
+    //     // $(e.target).children(":first").clone().appendTo(e.target);
+
+    //     this.setState({'currentRow': curr});
+    //     $(e.target).append('<div style={styles.rowx}><div style={styles.rowCount}>'+ curr +'</div> <div style={styles.rowContent}></div></div>');
         // $(e.target).children().remove();
         // console.log('rows', rows.toString())
         // rows.appendTo($(e.target));
-      }
+      //}
   }
 
   renderSnippetBox() {
@@ -48,13 +78,7 @@ class CreateSnippet extends React.Component {
       <div>
         <input className="snippet-name" type="text" placeholder="Name your snippet!"/>
         <div id="snippet-container" tabIndex="0" style={styles.textarea} onKeyPress={this.handleTextAreaEnter}>
-          <div style={styles.row}>
-            <div style={styles.rowCount}>1
-            </div>
-            <div style={styles.rowContent}>
-              hi
-            </div>
-          </div>
+            {this.renderRows()}
         </div>
       </div>
     )
@@ -73,7 +97,7 @@ class CreateSnippet extends React.Component {
 }
 
 const styles = {
-  'rowCount': {
+  'rowNumber': {
     backgroundColor: 'lightblue',
     display: 'inline-block',
     width: '30px'
