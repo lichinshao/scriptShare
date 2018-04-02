@@ -52,7 +52,7 @@ class CreateSnippet extends React.Component {
             <div style={styles.rowCount}>1
             </div>
             <div style={styles.rowContent}>
-              hi ramya
+              hi
             </div>
           </div>
         </div>
