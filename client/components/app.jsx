@@ -11,13 +11,21 @@ class App extends React.Component {
       user: '',
       view: 'createSnippet'
     }
+    this.changeView = this.changeView.bind(this);
   }
 
+  changeView(view) {
+    this.setState({view: view});
+  }
+
+  login(user) {
+
+  }
 
   renderView() {
     let view = this.state.view;
     switch(view) {
-      case 'login': return <Login />;
+      case 'login': return <Login changeView={this.changeView}/>;
       case 'createSnippet': return <CreateSnippet />
     }
   }

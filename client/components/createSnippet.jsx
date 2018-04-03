@@ -7,32 +7,39 @@ class CreateSnippet extends React.Component {
     this.state = {
       rows: {
         '1' : 'hi there',
-        '2' : ''
       },
       currentRow: 1,
       newLine: false
     }
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.changeFocus = this.changeFocus.bind(this);
+    this.handleSnippetKeyDown = this.handleSnippetKeyDown.bind(this);
+    this.setRowContent = this.setRowContent.bind(this);
     this.renderSnippetBox = this.renderSnippetBox.bind(this);
-    this.handleTextAreaEnter = this.handleTextAreaEnter.bind(this);
     this.renderRows = this.renderRows.bind(this);
     this.renderRow = this.renderRow.bind(this);
-    this.setRowContent = this.setRowContent.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidUpdate() {
-    if (this.state.newLine) {
-      let newLine = this.state.currentRow;
-      this.refs[newLine - 1].focus();
-    }
+    this.changeFocus();
   }
+
+
 
   handleSubmit() {
     let snippet = this.state.rows;
     console.log('snippet', snippet)
   }
 
-  handleTextAreaEnter(e) {
+  changeFocus() {
+    if (this.state.newLine) {
+      let curFocus = document.activeElement.id;
+      curFocus = Number(curFocus.substring(10));
+      this.refs[curFocus + 1].focus();
+    }
+  }
+
+  handleSnippetKeyDown(e) {
     let curr = Number(this.state.currentRow);
     let next = curr + 1;
     let newRowNumber = next.toString();
@@ -45,6 +52,21 @@ class CreateSnippet extends React.Component {
         newLine: true
       });
     }
+    console.log('in key down', e.which)
+    if (e.which === 8) {
+      console.log('curr active', document.activeElement.id.substring(10))
+      let current = Number(document.activeElement.id.substring(10)) + 1;
+      current = current.toString();
+      console.log('current after', current)
+      let currentRowContent = this.state.rows[current];
+      console.log(currentRowContent)
+    }
+  }
+
+  setRowContent (e, rowNumber) {
+    let rows = this.state.rows;
+    let rowNum = rowNumber.toString();
+    rows[rowNum] = e.target.value;
   }
 
   renderRows() {
@@ -62,21 +84,15 @@ class CreateSnippet extends React.Component {
     return (
       <div style={styles.row} key={index}>
         <div style={styles.rowNumber}>{rowNumber}</div>
-        <div style={styles.rowContent}><input type="text" ref={index} placeholder={rowString} onChange={(e) =>this.setRowContent(e, rowNumber)}/></div>
+        <div style={styles.rowContent}><input type="text" id={'snippetRow' + index} ref={index} placeholder={rowString} onChange={(e) =>this.setRowContent(e, rowNumber)}/></div>
       </div>
     )
-  }
-
-  setRowContent (e, rowNumber) {
-    let rows = this.state.rows;
-    let rowNum = rowNumber.toString();
-    rows[rowNum] = e.target.value;
   }
 
 
   renderSnippetBox() {
     return(
-      <div id="snippet-container" tabIndex="0" style={styles.textarea} onKeyPress={this.handleTextAreaEnter}>
+      <div id="snippet-container" tabIndex="0" style={styles.textarea} onKeyDown={this.handleSnippetKeyDown}>
           {this.renderRows()}
       </div>
     )
