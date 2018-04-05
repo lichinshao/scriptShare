@@ -12,6 +12,9 @@ db.on('error', () => {
   console.log('error in connecting to db')
 });
 
+const user = new Schema ({
+
+})
 
 module.exports = {
   mongoose: mongoose

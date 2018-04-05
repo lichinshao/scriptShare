@@ -24,7 +24,8 @@ class App extends React.Component {
   }
 
   registerUser(user) {
-    console.log(user)
+    console.log('in app', user)
+    this.setState({view: 'snippet'})
   }
 
   login(user) {
