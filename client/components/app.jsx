@@ -24,8 +24,12 @@ class App extends React.Component {
   }
 
   registerUser(user) {
-    console.log('in app', user)
-    this.setState({view: 'snippet'})
+    axios.post('/api/registerUser', user)
+      .then(res => {
+        console.log('res', res)
+      })
+      .catch(error => console.log('error', error))
+    //this.setState({view: 'snippet'})
   }
 
   login(user) {

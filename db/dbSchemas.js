@@ -13,9 +13,26 @@ db.on('error', () => {
 });
 
 const user = new Schema ({
-
+  firstname: String,
+  lastname: String,
+  username: String,
+  password: String
 })
 
+const snippet = new Schema ({
+  title: String,
+  description: String,
+  snippet: String,
+  createdBy: String,
+  editable: Boolean,
+  sharedWith: String
+})
+
+
+const User = mongoose.model('User', user);
+const Snippet = mongoose.model('Snippet', snippet);
 module.exports = {
-  mongoose: mongoose
+  User: User,
+  Snippet: Snippet
+  mongoose: mongoose,
 }

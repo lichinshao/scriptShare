@@ -48,7 +48,6 @@ class Login extends React.Component {
         username: this.state.regUsername,
         password: this.state.regPassword
       }
-      console.log('new user in login', newUser)
       this.props.registerUser(newUser);
     } else {
       alert('Oh no! Your passwords don\'t match!');
