@@ -16,6 +16,7 @@ class App extends React.Component {
     }
     this.changeView = this.changeView.bind(this);
     this.login = this.login.bind(this);
+    this.registerUser = this.registerUser.bind(this);
   }
 
   changeView(view) {
@@ -41,7 +42,7 @@ class App extends React.Component {
   renderView() {
     let view = this.state.view;
     switch(view) {
-      case 'login': return <Login login={this.login}/>;
+      case 'login': return <Login login={this.login} registerUser={this.registerUser}/>;
      // case 'createSnippet': return <CreateSnippet />;
       case 'snippet': return <Snippet />;
     }

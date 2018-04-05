@@ -30,6 +30,17 @@ class Login extends React.Component {
 
   }
 
+  confirmPwdMatch() {
+    let pwd1 = this.state.regPassword;
+    let pwd2 = this.state.regPassword2;
+    if (pwd1 === pwd2) {
+      //make request to register user in app
+    } else {
+      alert('Oh no! Your passwords don\'t match!');
+    }
+
+  }
+
   render() {
     return(
       <div className="container">
