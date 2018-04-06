@@ -39,7 +39,15 @@ class App extends React.Component {
   login(user) {
     axios.get('/api/login', {params: user})
       .then(res => {
-        console.log('res', res)
+        console.log('res', res.data)
+        if (res.data === 'user DNE') {
+          alert('Sorry! username was not found.')
+        } else if (res.data === 'incorrect password') {
+          alert('Incorrect Password. Please try again.')
+        } else {
+          console.log('setting the state')
+          this.setState({user: res.data})
+        }
       })
       .catch(error => console.log('error logging in', error))
   }

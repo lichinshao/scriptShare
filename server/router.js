@@ -6,7 +6,6 @@ const Snippet = require('../db/dbSchemas').Snippet;
 const bcrypt = require('bcrypt');
 
 router.post('/api/registerUser', (req, res) => {
-  console.log('req.body', req.body)
   let newUser = {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
@@ -22,21 +21,40 @@ router.post('/api/registerUser', (req, res) => {
       User.create(newUser, (err, entry) => {
         if (err) {throw err};
         if (entry) {
-          let regUser = {
+          //delete entry.password;
+          let user = {
             firstname: entry.firstname,
             lastname: entry.lastname,
-            username: entry.username,
-            id: entry._id
+            username: entry.username
           }
-          res.status(201).send(regUser);
-          //res.statusCode(201).send(entry)
+          res.status(201).send(user);
         }
       })
     } else {
-      console.log('username is already taken!')
       res.send('username is already taken!');
     }
   })
+});
+
+router.get('/api/login', (req, res) => {
+  let returningUser = req.query;
+  User.findOne({username: returningUser.username}, (err, user) => {
+    if (err) throw err;
+    if (!user) {
+      res.status(200).send('user DNE')
+    } else if (bcrypt.compareSync(returningUser.password, user.password)) {
+      //delete user.password;
+      let signedUser = {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        username: user.username
+      }
+      res.status(200).send(signedUser);
+    } else {
+      res.status(200).send('incorrect password');
+    }
+  })
 })
+
 
 module.exports = router;

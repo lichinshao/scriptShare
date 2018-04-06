@@ -13,7 +13,7 @@ class Login extends React.Component {
       regPassword:'',
       regPassword2: ''
     }
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
     this.handleRegisterClick = this.handleRegisterClick.bind(this);
   }
 
@@ -21,13 +21,15 @@ class Login extends React.Component {
     e.preventDefault();
     this.setState({[field]: e.target.value})
   }
-  handleSubmit(e) {
-    e.preventDefault();
+
+  handleLoginClick(e) {
+    console.log('in login click!')
     let user = {
       username: this.state.username,
       password: this.state.password
     }
     this.props.login(user);
+    e.preventDefault();
   }
 
   handleRegisterClick(e) {
@@ -74,7 +76,7 @@ class Login extends React.Component {
             <input type="password" name="password" onChange={e => this.handleTextChange(e, 'password')}/>
             </div>
             <div>
-            <button type="button" style={styles.button} onClick={this.handleSubmit}>Log me in!</button>
+            <button type="button" style={styles.button} onClick={this.handleLoginClick}>Log me in!</button>
             </div>
           </div>
           <div className="col-2" style={styles.textContainer}>
