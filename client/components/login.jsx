@@ -21,7 +21,8 @@ class Login extends React.Component {
     e.preventDefault();
     this.setState({[field]: e.target.value})
   }
-  handleSubmit() {
+  handleSubmit(e) {
+    e.preventDefault();
     let user = {
       username: this.state.username,
       password: this.state.password
@@ -29,8 +30,9 @@ class Login extends React.Component {
     this.props.login(user);
   }
 
-  handleRegisterClick() {
+  handleRegisterClick(e) {
     this.confirmPwdMatch();
+    e.preventDefault();
   }
 
   confirmPwdMatch() {
@@ -72,7 +74,7 @@ class Login extends React.Component {
             <input type="password" name="password" onChange={e => this.handleTextChange(e, 'password')}/>
             </div>
             <div>
-            <button type="submit" style={styles.button} onClick={this.handleSubmit}>Log me in!</button>
+            <button type="button" style={styles.button} onClick={this.handleSubmit}>Log me in!</button>
             </div>
           </div>
           <div className="col-2" style={styles.textContainer}>
@@ -97,7 +99,7 @@ class Login extends React.Component {
                 <input type="password" ref='pwd2' onChange={e => this.handleTextChange(e, 'regPassword2')}/>
               </div>
               <div>
-              <button type="submit" style={styles.button} onClick={this.handleRegisterClick}>Sign me up!</button>
+              <button type="button" style={styles.button} onClick={this.handleRegisterClick}>Sign me up!</button>
               </div>
             </form>
           </div>

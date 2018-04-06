@@ -33,6 +33,6 @@ const User = mongoose.model('User', user);
 const Snippet = mongoose.model('Snippet', snippet);
 module.exports = {
   User: User,
-  Snippet: Snippet
+  Snippet: Snippet,
   mongoose: mongoose,
 }

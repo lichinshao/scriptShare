@@ -26,7 +26,11 @@ class App extends React.Component {
   registerUser(user) {
     axios.post('/api/registerUser', user)
       .then(res => {
-        console.log('res', res)
+        if (res.data === 'username is already taken!') {
+          alert('Oh no! The username you have chosen is already in use. Please try another.');
+        } else {
+          this.setState({user: res.data, view: 'userAccount'})
+        }
       })
       .catch(error => console.log('error', error))
     //this.setState({view: 'snippet'})

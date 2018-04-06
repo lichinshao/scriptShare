@@ -16,7 +16,7 @@ class Snippet extends React.Component {
     this.setState({text: e.target.value});
   }
 
-  handleCreateClick() {
+  handleCreateClick(e) {
     console.log('clicked! ')
   }
 

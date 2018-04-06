@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('../db/dbSchemas').mongoose;
 const http = require('http');
-const router = require('./middleware/router');
+const router = require('./router');
 
 const app = express();
 const server = http.Server(app);
