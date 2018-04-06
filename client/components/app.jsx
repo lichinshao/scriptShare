@@ -6,6 +6,7 @@ import axios from 'axios';
 import Login from './login.jsx';
 //import CreateSnippet from './createSnippet.jsx';
 import Snippet from './snippet.jsx';
+import UserAccount from './userAccount.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -39,14 +40,12 @@ class App extends React.Component {
   login(user) {
     axios.get('/api/login', {params: user})
       .then(res => {
-        console.log('res', res.data)
         if (res.data === 'user DNE') {
           alert('Sorry! username was not found.')
         } else if (res.data === 'incorrect password') {
           alert('Incorrect Password. Please try again.')
         } else {
-          console.log('setting the state')
-          this.setState({user: res.data})
+          this.setState({user: res.data, view: 'userAccount'})
         }
       })
       .catch(error => console.log('error logging in', error))
@@ -62,6 +61,7 @@ class App extends React.Component {
       case 'login': return <Login login={this.login} registerUser={this.registerUser}/>;
      // case 'createSnippet': return <CreateSnippet />;
       case 'snippet': return <Snippet />;
+      case 'userAccount': return <UserAccount user={this.state.user} />;
     }
   }
 
