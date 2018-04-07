@@ -56,5 +56,44 @@ router.get('/api/login', (req, res) => {
   })
 })
 
+router.get('/api/getSnippetID', (req, res) => {
+  //could use uuid here but dont need that many chars?
+  let char = 'ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const makeID = function() {
+    let id = '';
+    var generate = function() {
+      if (id.length === 8) {
+        return;
+      }
+      var randomNum = Math.floor(Math.random() * char.length);
+      id += char[randomNum];
+      generate();
+    }
+  generate();
+  return id;
+  }
+
+  const getNewID = function() {
+    let newID = makeID();
+    console.log('newID', newID)
+    Snippet.findOne({id: newID}, (err, snippet) => {
+      if (err) throw err;
+      if (snippet) {
+        getNewID();
+      } else {
+        let snippet = {id: newID}
+        Snippet.create(snippet, (err, entry) => {
+          if (err) throw err;
+          if (entry) {
+            console.log('success in creating snippet', entry);
+            res.status(200).send(entry);
+          }
+        })
+      }
+    })
+  }
+  getNewID();
+})
+
 
 module.exports = router;

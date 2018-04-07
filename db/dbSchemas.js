@@ -20,6 +20,7 @@ const user = new Schema ({
 })
 
 const snippet = new Schema ({
+  id: String,
   title: String,
   description: String,
   snippet: String,

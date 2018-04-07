@@ -1,23 +1,31 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
+import axios from 'axios';
+
 class Snippet extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      text: ''
+      text: '',
+      snippetID: ''
     }
     this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
     this.handleCreateClick = this.handleCreateClick.bind(this);
   }
 
+
+  newSnippet() {
+  }
+
   handleTextAreaChange(e) {
-    console.log('text', e.target.value)
     this.setState({text: e.target.value});
   }
 
   handleCreateClick(e) {
-    console.log('clicked! ')
+    console.log('text in text area', this.state.text)
+    //this.props.submitSnippet()
+    let snippet = this.state.text;
   }
 
 

@@ -1,27 +1,41 @@
 import React from 'react';
-import ReactDom from 'react-dom';
-import { Route, Link } from 'react-router-dom';
+import ReactDOM from 'react-dom';
+import { Redirect, Route, withRouter, Switch} from 'react-router-dom';
 // import { AxiosProvider, Request, Get, } from 'react-axios';
 import axios from 'axios';
 import Login from './login.jsx';
 //import CreateSnippet from './createSnippet.jsx';
 import Snippet from './snippet.jsx';
 import UserAccount from './userAccount.jsx';
+import { Tabs, Tab } from 'react-bootstrap';
 
-class App extends React.Component {
+class BaseApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: '',
-      view: 'login'
     }
-    this.changeView = this.changeView.bind(this);
+   // this.changeView = this.changeView.bind(this);
     this.login = this.login.bind(this);
     this.registerUser = this.registerUser.bind(this);
+    this.getSnippetID = this.getSnippetID.bind(this);
+
   }
 
-  changeView(view) {
-    this.setState({view: view});
+  componentWillMount() {
+    //this.getSnippetID();
+  }
+
+  getSnippetID() {
+    // console.log('in get snippetID')
+    // console.log('history', this.props.history)
+    axios.get('/api/getSnippetID')
+      .then(res => {
+        console.log('res', res.data)
+        // this.setState({snippetID: res.data.id});
+        this.props.history.push(`/${this.state.user.username}/${res.data.id}`);
+      })
+      .catch(error => console.log('error getting ID'))
   }
 
   registerUser(user) {
@@ -30,7 +44,8 @@ class App extends React.Component {
         if (res.data === 'username is already taken!') {
           alert('Oh no! The username you have chosen is already in use. Please try another.');
         } else {
-          this.setState({user: res.data, view: 'userAccount'})
+          this.setState({user: res.data})
+          // this.props.history.push(``)
         }
       })
       .catch(error => console.log('error', error))
@@ -45,7 +60,8 @@ class App extends React.Component {
         } else if (res.data === 'incorrect password') {
           alert('Incorrect Password. Please try again.')
         } else {
-          this.setState({user: res.data, view: 'userAccount'})
+          this.setState({user: res.data, view: 'userAccount'});
+          this.props.history.push(`/${res.data.username}` )
         }
       })
       .catch(error => console.log('error logging in', error))
@@ -55,23 +71,26 @@ class App extends React.Component {
 
   }
 
-  renderView() {
-    let view = this.state.view;
-    switch(view) {
-      case 'login': return <Login login={this.login} registerUser={this.registerUser}/>;
-     // case 'createSnippet': return <CreateSnippet />;
-      case 'snippet': return <Snippet />;
-      case 'userAccount': return <UserAccount user={this.state.user} />;
-    }
-  }
-
   render() {
     return (
-      <div>
-        {this.renderView()}
-      </div>
+
+        <Switch>
+          <Route exact path='/'
+            render={() => <Login login={this.login} registerUser={this.registerUser}/>}>
+          </Route>
+          <Route exact path='/:username/'
+            render={() => <UserAccount user={this.state.user} history={this.props.history} newSnippet={this.getSnippetID}/>}>
+          </Route>
+          <Route path='/:username/:snippetID'
+            render={() => <Snippet user={this.state.user} history={this.props.history}/> }>
+          </Route>
+          <Route path='*' component={Login}></Route>
+        </Switch>
+
     )
   }
 }
+
+const App = withRouter(BaseApp);
 
 export default App;
