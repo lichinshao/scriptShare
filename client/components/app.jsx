@@ -58,7 +58,6 @@ class BaseApp extends React.Component {
         } else if (res.data === 'incorrect password') {
           alert('Incorrect Password. Please try again.')
         } else {
-          console.log(res.data)
           let user = {
             firstname: res.data.firstname,
             lastname: res.data.lastname,

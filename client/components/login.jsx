@@ -23,7 +23,6 @@ class Login extends React.Component {
   }
 
   handleLoginClick(e) {
-    console.log('in login click!')
     let user = {
       username: this.state.username,
       password: this.state.password
