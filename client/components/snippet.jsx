@@ -8,59 +8,88 @@ class Snippet extends React.Component {
     super(props);
     this.state = {
       text: '',
-      title: 'Snippet Title',
-      description: 'Snippet Description'
+      title: '',
+      description: ''
     }
     this.handleTextChange = this.handleTextChange.bind(this);
-    this.handleCreateClick = this.handleCreateClick.bind(this);
+    this.handleSaveClick = this.handleSaveClick.bind(this);
+    this.setSnippet = this.setSnippet.bind(this);
+  }
+
+  componentWillMount() {
+    this.setSnippet();
+  }
+
+  setSnippet() {
+    let snippet = this.props.snippet;
+    if (snippet) {
+      this.setState({
+        title: snippet.title,
+        description: snippet.description,
+        text: snippet.snippet
+      })
+    } else {
+      this.setState({
+        title: '',
+        description: '',
+        text: ''
+      })
+    }
   }
 
   handleTextChange(e, field) {
     this.setState({[field]: e.target.value});
   }
 
-  handleCreateClick() {
+  handleSaveClick() {
     let snippet = {
       title: this.state.title,
       description: this.state.description,
       text: this.state.text
     };
+    if (this.props.snippet) {
+      snippet.id = this.props.snippet.id
+    }
     this.props.submitSnippet(snippet);
   }
 
 
   render() {
-    let snippet = this.props.snippet;
-    var title = '';
-    var desc = '';
-    var text = '';
-    if (snippet) {
-      title = snippet.title;
-      desc = snippet.description;
-      text = snippet.text
-      console.log('snippet', snippet)
-      console.log(title, desc, text)
-    } else {
-      title = this.state.title;
-      desc = this.state.desc;
-    }
+
     return (
       <div className="container">
         <div className="snippet-info">
-          <div className="snippet-title">
-            <input value={title} onChange={e => this.handleTextChange(e, 'title')}/>
+          <div className="snippet-title" style={styles.rows}>
+            <span>Title</span>
+            <textarea rows="1" style={styles.title} defaultValue={this.state.title} onChange={e => this.handleTextChange(e, 'title')}>
+            </textarea>
           </div>
-          <div>
-            <input value={desc} onChange={e => this.handleTextChange(e, 'description')}/>
+          <div className="snippet-description" style={styles.rows}>
+            <span>Description</span>
+            <textarea rows="1" style={styles.description} defaultValue={this.state.description} onChange={e => this.handleTextChange(e, 'description')}>
+            </textarea>
           </div>
         </div>
-        <div className="snippet-textarea">
-          <textarea value={text} onChange={e => this.handleTextChange(e, 'text')}>
+        <div className="snippet-textarea" style={styles.rows}>
+          <span>Enter your text here:</span>
+          <textarea onChange={e => this.handleTextChange(e, 'text')} defaultValue={this.state.text}>
           </textarea>
         </div>
-        <button onClick={this.handleCreateClick}>Create Snippet!</button>
+        <button onClick={this.handleSaveClick}>Save!</button>
       </div>
     )
+
+  }
+}
+
+const styles = {
+  title: {
+    width: '300px'
+  },
+  description: {
+    width: '300px'
+  },
+  rows: {
 
   }
 }

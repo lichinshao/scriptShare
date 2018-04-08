@@ -73,12 +73,14 @@ class BaseApp extends React.Component {
   }
 
   submitSnippet(snippet) {
-    snippet.id = this.state.snippetID;
+    if (!snippet.id) {
+      snippet.id = this.state.snippetID;
+    }
     snippet.username = this.state.user.username;
     axios.post('/api/submitSnippet', snippet)
       .then(res => {
-        this.setState({snippets: res.data})
-        this.props.history.push(`/${this.state.username}`)
+        this.setState({snippets: res.data, currentSnippet: ''})
+        this.props.history.push(`/${this.state.user.username}`)
       })
       .catch(error => console.log('error submitting snippet'))
   }
