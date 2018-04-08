@@ -49,7 +49,11 @@ router.get('/api/login', (req, res) => {
         lastname: user.lastname,
         username: user.username
       }
-      res.status(200).send(signedUser);
+      Snippet.find({createdBy: signedUser.username}, (err, results) => {
+        if (err) throw err;
+        signedUser.snippets = results;
+        res.status(200).send(signedUser);
+      })
     } else {
       res.status(200).send('incorrect password');
     }
@@ -85,7 +89,6 @@ router.get('/api/getSnippetID', (req, res) => {
         Snippet.create(snippet, (err, entry) => {
           if (err) throw err;
           if (entry) {
-            console.log('success in creating snippet', entry);
             res.status(200).send(entry);
           }
         })
@@ -93,6 +96,26 @@ router.get('/api/getSnippetID', (req, res) => {
     })
   }
   getNewID();
+});
+
+router.post('/api/submitSnippet', (req, res) => {
+  console.log('req.body', req.body)
+  let newSnippet = req.body;
+  Snippet.update({id: newSnippet.id},
+    {$set: {
+      title: req.body.title,
+      description: req.body.description,
+      snippet: req.body.text,
+      createdBy: req.body.username
+  }}, (err, success) => {
+    if (err) throw err;
+    if (success) {
+      Snippet.find({createdBy: req.body.username}, (err, results) => {
+        console.log('results', results)
+        res.status(200).send(results)
+      })
+    }
+  })
 })
 
 

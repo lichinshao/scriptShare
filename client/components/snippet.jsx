@@ -8,45 +8,60 @@ class Snippet extends React.Component {
     super(props);
     this.state = {
       text: '',
-      snippetID: ''
+      title: 'Snippet Title',
+      description: 'Snippet Description'
     }
-    this.handleTextAreaChange = this.handleTextAreaChange.bind(this);
+    this.handleTextChange = this.handleTextChange.bind(this);
     this.handleCreateClick = this.handleCreateClick.bind(this);
   }
 
-
-  newSnippet() {
+  handleTextChange(e, field) {
+    this.setState({[field]: e.target.value});
   }
 
-  handleTextAreaChange(e) {
-    this.setState({text: e.target.value});
-  }
-
-  handleCreateClick(e) {
-    console.log('text in text area', this.state.text)
-    //this.props.submitSnippet()
-    let snippet = this.state.text;
+  handleCreateClick() {
+    let snippet = {
+      title: this.state.title,
+      description: this.state.description,
+      text: this.state.text
+    };
+    this.props.submitSnippet(snippet);
   }
 
 
   render() {
+    let snippet = this.props.snippet;
+    var title = '';
+    var desc = '';
+    var text = '';
+    if (snippet) {
+      title = snippet.title;
+      desc = snippet.description;
+      text = snippet.text
+      console.log('snippet', snippet)
+      console.log(title, desc, text)
+    } else {
+      title = this.state.title;
+      desc = this.state.desc;
+    }
     return (
       <div className="container">
         <div className="snippet-info">
           <div className="snippet-title">
-            <input placeholder="Snippet title" />
+            <input value={title} onChange={e => this.handleTextChange(e, 'title')}/>
           </div>
           <div>
-            <input placeholder="Snippet Description" />
+            <input value={desc} onChange={e => this.handleTextChange(e, 'description')}/>
           </div>
         </div>
         <div className="snippet-textarea">
-          <textarea onChange={e => this.handleTextAreaChange(e)}>
+          <textarea value={text} onChange={e => this.handleTextChange(e, 'text')}>
           </textarea>
         </div>
         <button onClick={this.handleCreateClick}>Create Snippet!</button>
       </div>
     )
+
   }
 }
 

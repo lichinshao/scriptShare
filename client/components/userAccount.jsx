@@ -11,11 +11,23 @@ class UserAccount extends React.Component {
 
     }
     this.handleCreateClick = this.handleCreateClick.bind(this);
-    // this.submitSnippet = this.submitSnippet.bind(this);
+    this.renderSnippets = this.renderSnippets.bind(this);
   }
+
 
   handleCreateClick() {
     this.props.newSnippet();
+  }
+
+  renderSnippets() {
+    let snippets = this.props.snippets;
+    return(
+      snippets.map((snippet, ind) => (
+        <li key={ind}>
+          <span onClick={() => this.props.editSnippet(snippet)}>{snippet.title}</span>
+        </li>
+      ))
+    )
   }
 
   render() {
@@ -25,6 +37,12 @@ class UserAccount extends React.Component {
       <div className="container">
         <p>Welcome, {user.firstname}!</p>
         <button type="button" onClick={this.handleCreateClick}>Create New Snippet</button>
+        <div>
+          <p>Your Snippets:</p>
+          <ul>
+          {this.renderSnippets()}
+          </ul>
+        </div>
       </div>
     )
   }

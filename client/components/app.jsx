@@ -14,12 +14,14 @@ class BaseApp extends React.Component {
     super(props);
     this.state = {
       user: '',
+      curentSnippet: ''
     }
    // this.changeView = this.changeView.bind(this);
     this.login = this.login.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.getSnippetID = this.getSnippetID.bind(this);
-
+    this.submitSnippet = this.submitSnippet.bind(this);
+    this.editSnippet = this.editSnippet.bind(this);
   }
 
   componentWillMount() {
@@ -27,12 +29,9 @@ class BaseApp extends React.Component {
   }
 
   getSnippetID() {
-    // console.log('in get snippetID')
-    // console.log('history', this.props.history)
     axios.get('/api/getSnippetID')
       .then(res => {
-        console.log('res', res.data)
-        // this.setState({snippetID: res.data.id});
+        this.setState({snippetID: res.data.id});
         this.props.history.push(`/${this.state.user.username}/${res.data.id}`);
       })
       .catch(error => console.log('error getting ID'))
@@ -45,11 +44,10 @@ class BaseApp extends React.Component {
           alert('Oh no! The username you have chosen is already in use. Please try another.');
         } else {
           this.setState({user: res.data})
-          // this.props.history.push(``)
+          this.props.history.push(`/${res.data.username}`)
         }
       })
       .catch(error => console.log('error', error))
-    //this.setState({view: 'snippet'})
   }
 
   login(user) {
@@ -60,15 +58,34 @@ class BaseApp extends React.Component {
         } else if (res.data === 'incorrect password') {
           alert('Incorrect Password. Please try again.')
         } else {
-          this.setState({user: res.data, view: 'userAccount'});
+          console.log(res.data)
+          let user = {
+            firstname: res.data.firstname,
+            lastname: res.data.lastname,
+            username: res.data.username
+          }
+
+          this.setState({user: user, snippets: res.data.snippets});
           this.props.history.push(`/${res.data.username}` )
         }
       })
       .catch(error => console.log('error logging in', error))
   }
 
-  submitSnippet() {
+  submitSnippet(snippet) {
+    snippet.id = this.state.snippetID;
+    snippet.username = this.state.user.username;
+    axios.post('/api/submitSnippet', snippet)
+      .then(res => {
+        this.setState({snippets: res.data})
+        this.props.history.push(`/${this.state.username}`)
+      })
+      .catch(error => console.log('error submitting snippet'))
+  }
 
+  editSnippet(snippet) {
+    this.setState({currentSnippet: snippet});
+    this.props.history.push(`/${this.state.user.username}/${snippet.id}`)
   }
 
   render() {
@@ -79,10 +96,10 @@ class BaseApp extends React.Component {
             render={() => <Login login={this.login} registerUser={this.registerUser}/>}>
           </Route>
           <Route exact path='/:username/'
-            render={() => <UserAccount user={this.state.user} history={this.props.history} newSnippet={this.getSnippetID}/>}>
+            render={() => <UserAccount user={this.state.user} history={this.props.history} newSnippet={this.getSnippetID} snippets={this.state.snippets} editSnippet={this.editSnippet}/>}>
           </Route>
           <Route path='/:username/:snippetID'
-            render={() => <Snippet user={this.state.user} history={this.props.history}/> }>
+            render={() => <Snippet snippet={this.state.currentSnippet} user={this.state.user} history={this.props.history} submitSnippet={this.submitSnippet}/> }>
           </Route>
           <Route path='*' component={Login}></Route>
         </Switch>
