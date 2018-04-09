@@ -16,7 +16,6 @@ class BaseApp extends React.Component {
       user: '',
       currentSnippet: ''
     }
-   // this.changeView = this.changeView.bind(this);
     this.login = this.login.bind(this);
     this.registerUser = this.registerUser.bind(this);
     this.getSnippetID = this.getSnippetID.bind(this);
@@ -25,7 +24,6 @@ class BaseApp extends React.Component {
   }
 
   componentWillMount() {
-    //this.getSnippetID();
   }
 
   getSnippetID() {
@@ -63,7 +61,6 @@ class BaseApp extends React.Component {
             lastname: res.data.lastname,
             username: res.data.username
           }
-
           this.setState({user: user, snippets: res.data.snippets});
           this.props.history.push(`/${res.data.username}` )
         }

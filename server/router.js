@@ -81,7 +81,6 @@ router.get('/api/getSnippetID', (req, res) => {
 
   const getNewID = function() {
     let newID = makeID();
-    console.log('newID', newID)
     Snippet.findOne({id: newID}, (err, snippet) => {
       if (err) throw err;
       if (snippet) {
@@ -101,7 +100,6 @@ router.get('/api/getSnippetID', (req, res) => {
 });
 
 router.post('/api/submitSnippet', (req, res) => {
-  console.log('req.body', req.body)
   let newSnippet = req.body;
   Snippet.update({id: newSnippet.id},
     {$set: {
@@ -113,7 +111,6 @@ router.post('/api/submitSnippet', (req, res) => {
     if (err) throw err;
     if (success) {
       Snippet.find({createdBy: req.body.username}, (err, results) => {
-        console.log('results', results)
         res.status(200).send(results)
       })
     }
