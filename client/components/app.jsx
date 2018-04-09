@@ -14,7 +14,7 @@ class BaseApp extends React.Component {
     super(props);
     this.state = {
       user: '',
-      curentSnippet: ''
+      currentSnippet: ''
     }
    // this.changeView = this.changeView.bind(this);
     this.login = this.login.bind(this);

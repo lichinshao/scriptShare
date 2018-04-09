@@ -21,17 +21,20 @@ class UserAccount extends React.Component {
 
   renderSnippets() {
     let snippets = this.props.snippets;
-    return(
-      snippets.map((snippet, ind) => (
-        <li key={ind}>
-          <span onClick={() => this.props.editSnippet(snippet)}>{snippet.title}</span>
-        </li>
-      ))
-    )
+    if (snippets) {
+      return(
+        snippets.map((snippet, ind) => (
+          <li key={ind}>
+            <span onClick={() => this.props.editSnippet(snippet)}>{snippet.title}</span>
+          </li>
+        ))
+      )
+    } else {
+      return null;
+    }
   }
 
   render() {
-    //console.log('history in useraccount', this.context)
     let user = this.props.user;
     return (
       <div className="container">

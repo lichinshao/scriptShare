@@ -5,6 +5,8 @@ const User = require('../db/dbSchemas').User;
 const Snippet = require('../db/dbSchemas').Snippet;
 const bcrypt = require('bcrypt');
 
+
+
 router.post('/api/registerUser', (req, res) => {
   let newUser = {
     firstname: req.body.firstname,
